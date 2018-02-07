@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified"> 
+	<!-- nextpresso v1.9.2 -->
+	<!-- EXPERIMENT Info -->
+
+	<xs:annotation>
+		<xs:documentation>
+			RNAseq pipeline EXPERIMENT schema
+			Osvaldo Graña
+			Jan 2015
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:element name="experiment">  		
+		<xs:complexType>
+    			<xs:sequence>
+				<xs:element name="library" minOccurs="2" maxOccurs="1000">
+					<xs:complexType>
+    						<xs:sequence>
+							<xs:element name="rightFile" type="xs:string" minOccurs="0" maxOccurs="1"/>
+							<xs:element name="type" type="xs:string" minOccurs="0" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="fastq"/>
+										<xs:enumeration value="bam"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="solexaQualityEncoding">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="solexa"/>
+										<xs:enumeration value="solexa1.3"/>
+										<xs:enumeration value=""/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="libraryType">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="unstranded"/>
+										<xs:enumeration value="firststrand"/>
+										<xs:enumeration value="secondstrand"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="trimming">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="nNucleotidesLeftEnd" type="xs:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
+										<xs:element name="nNucleotidesRightEnd" type="xs:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
+									</xs:sequence>
+									<xs:attribute name="do" type="xs:boolean"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="downsampling">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="seed" type="xs:string" minOccurs="1" maxOccurs="1"/>
+										<xs:element name="nReads" type="xs:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
+									</xs:sequence>
+									<xs:attribute name="do" type="xs:boolean"/>
+								</xs:complexType>
+							</xs:element>							
+							<xs:element name="mateInnerDist" type="xs:integer" default="50"/>
+							<xs:element name="mateStdDev" type="xs:nonNegativeInteger" default="20"/>
+						</xs:sequence>						
+						<xs:attribute name="name" type="xs:string"/>
+						<xs:attribute name="leftFile" type="xs:string"/>
+					</xs:complexType>
+				</xs:element>
+				
+				<xs:element name="comparison" minOccurs="0" maxOccurs="50">
+					<xs:complexType>
+    						<xs:sequence>
+							<xs:element name="condition" minOccurs="2" maxOccurs="10">								
+								<xs:complexType>															
+    									<xs:sequence>
+										<xs:element name="libraryName" type="xs:string" minOccurs="1" maxOccurs="1000"/>
+									</xs:sequence>
+									<xs:attribute name="name" type="xs:string"/>
+									<xs:attribute name="cuffdiffPosition" type="xs:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
+								</xs:complexType>															
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="name" type="xs:string"/>
+					</xs:complexType>
+				</xs:element>
+
+				<xs:element name="tophat">
+			  		<xs:complexType>
+			    			<xs:sequence>
+							<xs:element name="coverageSearch">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="--coverage-search"/>
+										<xs:enumeration value="--no-coverage-search"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+
+							<xs:element name="fusionSearchExperiment">
+								<xs:complexType>									
+									<!--<xs:sequence>
+			       							<xs:element name="mateInnerDist" type="xs:string" default="50" minOccurs="0" maxOccurs="1"/>
+										<xs:element name="mateStdDev" type="xs:string" default="20" minOccurs="0" maxOccurs="1"/>
+				      					</xs:sequence>-->
+									<xs:attribute name="performFusionSearch" type="xs:boolean"/>
+								</xs:complexType>
+							</xs:element>      								
+    						</xs:sequence>
+
+						<xs:attribute name="maxMultihits" type="xs:nonNegativeInteger" default="5"/>
+						<xs:attribute name="readMismatches" type="xs:nonNegativeInteger" default="2"/>
+						<xs:attribute name="segmentLength" type="xs:nonNegativeInteger" default="20"/>
+                        			<xs:attribute name="segmentMismatches" type="xs:nonNegativeInteger" default="1"/>
+						<xs:attribute name="nTophatThreads" type="xs:nonNegativeInteger" default="1"/>
+						<xs:attribute name="reportSecondaryAlignments" type="xs:boolean" default="false"/>
+						<xs:attribute name="bowtie" type="xs:string" default="--bowtie1"/>
+						<xs:attribute name="readEditDist" type="xs:nonNegativeInteger" default="2"/>
+						<xs:attribute name="readGapLength" type="xs:nonNegativeInteger" default="2"/>
+						<xs:attribute name="spliceMismatches" type="xs:nonNegativeInteger" default="0"/>
+						<xs:attribute name="referenceIndexing" type="xs:boolean" default="false"/>
+						<xs:attribute name="useGTF" type="xs:boolean" default="true"/>
+			  		</xs:complexType>
+				</xs:element>
+
+				<xs:element name="cufflinks">
+			  		<xs:complexType>
+						<xs:attribute name="useGTF" type="xs:boolean" default="true"/>
+                       				<xs:attribute name="nThreads" type="xs:nonNegativeInteger" default="1"/>
+                        			<xs:attribute name="fragBiasCorrect" type="xs:boolean" default="true"/>
+						<xs:attribute name="multiReadCorrect" type="xs:boolean" default="true"/>
+						<xs:attribute name="libraryNormalizationMethod" type="xs:string" default="classic-fpkm"/>						
+						<xs:attribute name="maxBundleFrags" type="xs:nonNegativeInteger" default="500000"/>
+						<xs:attribute name="noEffectiveLengthCorrection" type="xs:boolean" default="true"/>
+						<xs:attribute name="noLengthCorrection" type="xs:boolean" default="false"/>
+						<xs:attribute name="normalization" type="xs:string" default="compatibleHits"/>
+			  		</xs:complexType>
+				</xs:element>
+
+				<xs:element name="cuffmerge">
+			  		<xs:complexType>
+                       				<xs:attribute name="nThreads" type="xs:nonNegativeInteger" default="1"/>						
+			  		</xs:complexType>
+				</xs:element>
+
+				<xs:element name="cuffquant">
+			  		<xs:complexType>
+						<xs:attribute name="useCuffmergeAssembly" type="xs:boolean" default="false"/>
+                        			<xs:attribute name="nThreads" type="xs:nonNegativeInteger" default="1"/>
+						<xs:attribute name="fragBiasCorrect" type="xs:boolean" default="true"/>
+						<xs:attribute name="multiReadCorrect" type="xs:boolean" default="true"/>
+						<xs:attribute name="seed" type="xs:string" default="123"/>
+						<xs:attribute name="maxBundleFrags" type="xs:nonNegativeInteger" default="500000"/>
+						<xs:attribute name="noEffectiveLengthCorrection" type="xs:boolean" default="true"/>
+						<xs:attribute name="noLengthCorrection" type="xs:boolean" default="false"/>
+			  		</xs:complexType>
+				</xs:element>
+
+				<xs:element name="cuffnorm">
+			  		<xs:complexType>
+						<xs:attribute name="useCuffmergeAssembly" type="xs:boolean" default="false"/>
+						<xs:attribute name="nThreads" type="xs:nonNegativeInteger" default="1"/>
+                       				<xs:attribute name="outputFormat" type="xs:string" default="simple-table"/>
+						<xs:attribute name="libraryNormalizationMethod" type="xs:string" default="geometric"/>
+						<xs:attribute name="seed" type="xs:string" default="123"/>
+						<xs:attribute name="normalization" type="xs:string" default="compatibleHits"/>
+						<xs:attribute name="backgroundLevel" type="xs:nonNegativeInteger" default="0"/>
+						<xs:attribute name="requiredPercentageOfSamplesOverBackgroundLevel" type="xs:nonNegativeInteger" default="0"/>
+						<xs:attribute name="IQRthresdhold_forFlatPatternFiltering" type="xs:decimal" default="0"/>												
+			  		</xs:complexType>
+				</xs:element>	
+				
+				<xs:element name="cuffdiff">
+			  		<xs:complexType>
+						<xs:attribute name="useCuffmergeAssembly" type="xs:boolean" default="false"/>
+                       				<xs:attribute name="nThreads" type="xs:nonNegativeInteger" default="1"/>
+                       				<xs:attribute name="fragBiasCorrect" type="xs:boolean" default="true"/>
+						<xs:attribute name="multiReadCorrect" type="xs:boolean" default="true"/>						
+						<xs:attribute name="libraryNormalizationMethod" type="xs:string" default="geometric"/>
+						<xs:attribute name="FDR" type="xs:decimal" default="0.05"/>
+						<xs:attribute name="minAlignmentCount" type="xs:nonNegativeInteger" default="10"/>
+						<xs:attribute name="seed" type="xs:string" default="123"/>
+						<xs:attribute name="FPKMthreshold" type="xs:decimal" default="0.05"/>
+						<xs:attribute name="maxBundleFrags" type="xs:nonNegativeInteger" default="500000"/>
+						<xs:attribute name="noEffectiveLengthCorrection" type="xs:boolean" default="true"/>
+						<xs:attribute name="noLengthCorrection" type="xs:boolean" default="false"/>
+						<xs:attribute name="dispersionMethod" type="xs:string" default="pooled"/>
+			  		</xs:complexType>
+				</xs:element>
+
+				<xs:element name="htseqcount">
+			  		<xs:complexType>
+						<xs:sequence>
+				    			<xs:element name="mode" type="xs:string" minOccurs="0" maxOccurs="1">
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="union"/>
+										<xs:enumeration value="intersection-strict"/>
+										<xs:enumeration value="intersection-nonempty"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+
+                        			<xs:attribute name="minaqual" type="xs:nonNegativeInteger" default="0"/>
+						<xs:attribute name="featuretype" type="xs:string" default="exon"/>						
+						<xs:attribute name="idattr" type="xs:string" default="gene_id"/>
+			  		</xs:complexType>
+				</xs:element>
+				
+				<xs:element name="deseq2">
+			  		<xs:complexType>
+						<xs:attribute name="nThreads" type="xs:nonNegativeInteger" default="1" minOccurs="0" maxOccurs="1"/>
+						<xs:attribute name="alpha" type="xs:float" default="0.05" minOccurs="0" maxOccurs="1"/>
+						<xs:attribute name="pAdjustMethod" type="xs:string" minOccurs="0" maxOccurs="1">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="BH"/>
+									<xs:enumeration value="bonferroni"/>
+									<xs:enumeration value="fdr"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+			  		</xs:complexType>
+				</xs:element>						
+
+				<xs:element name="bedGraphToBigWig">
+			  		<xs:complexType>
+						<xs:sequence>
+                            			</xs:sequence>
+
+                        			<xs:attribute name="chromosomeSizesFile" type="xs:string"/>
+						<xs:attribute name="bigDataUrlPrefix" type="xs:string"/>
+			  		</xs:complexType>
+				</xs:element>
+
+				<xs:element name="gsea">
+			  		<xs:complexType>
+						<xs:sequence>
+                            				<xs:element name="geneset" type="xs:string" minOccurs="1" maxOccurs="150"/>
+						</xs:sequence>
+
+
+						<xs:attribute name="collapse" type="xs:boolean" default="false"/>
+						<xs:attribute name="mode" type="xs:string" default="Max_probe"/>
+						<xs:attribute name="norm" type="xs:string" default="meandiv"/>
+						<xs:attribute name="nperm" type="xs:nonNegativeInteger" default="1000"/>						
+						<xs:attribute name="scoring_scheme" type="xs:string" default="weighted"/>						
+						<xs:attribute name="include_only_symbols" type="xs:boolean" default="true"/>
+						<xs:attribute name="make_sets" type="xs:boolean" default="true"/>
+						<xs:attribute name="plot_top_x" type="xs:nonNegativeInteger" default="75"/>
+						<xs:attribute name="rnd_seed" type="xs:string" default="timestamp"/>
+						<xs:attribute name="set_max" type="xs:nonNegativeInteger" default="500"/>
+						<xs:attribute name="set_min" type="xs:nonNegativeInteger" default="15"/>
+						<xs:attribute name="zip_report" type="xs:boolean" default="true"/>
+			  		</xs:complexType>
+				</xs:element>
+
+				<xs:element name="tophatfusion">
+			  		<xs:complexType>
+						<xs:attribute name="numFusionReads" type="xs:nonNegativeInteger"/>
+						<xs:attribute name="numFusionPairs" type="xs:nonNegativeInteger"/>
+						<xs:attribute name="numFusionBoth" type="xs:nonNegativeInteger"/>
+						<xs:attribute name="fusionReadMismatches" type="xs:nonNegativeInteger"/>						
+						<xs:attribute name="fusionMultireads" type="xs:nonNegativeInteger"/>						
+						<xs:attribute name="nonHuman" type="xs:boolean" default="false"/>
+						<xs:attribute name="pathToAnnotationFiles" type="xs:string"/>
+						<xs:attribute name="nTophatFusionThreads" type="xs:nonNegativeInteger"/>
+						<xs:attribute name="pathToBlastAll" type="xs:string"/>
+						<xs:attribute name="pathToBlastn" type="xs:string"/>
+			  		</xs:complexType>
+				</xs:element>
+
+				<xs:element name="spikeInControlMixes">
+			  		<xs:complexType>
+						<xs:attribute name="do" type="xs:boolean"/>
+						<xs:attribute name="ref" type="xs:string"/>
+						<xs:attribute name="gtf" type="xs:string"/>
+						<xs:attribute name="concentrations" type="xs:string"/>
+						<xs:attribute name="nThreadsForBowtie" type="xs:nonNegativeInteger"/>
+			  		</xs:complexType>
+				</xs:element>
+
+    			</xs:sequence>
+
+			<xs:attribute name="projectName" type="xs:string"/>
+			<xs:attribute name="workspace" type="xs:string"/>
+			<xs:attribute name="referenceSequence" type="xs:string"/>
+			<xs:attribute name="GTF" type="xs:string"/>
+			<xs:attribute name="pairedEnd" type="xs:boolean" default="false"/>
+			<xs:attribute name="fileWithChecksumCodesToValidate" type="xs:string" default=""/>
+  		</xs:complexType>
+	</xs:element>
+</xs:schema>
+
+
+
+<!--	<xs:element name="category">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="con"/>
+				<xs:enumeration value="threading"/>
+				<xs:enumeration value="cm"/>
+				<xs:enumeration value="ab"/>
+				<xs:enumeration value="meta"/>
+ 			
+			<xs:pattern value="con|threading|cm|ab|meta" /> 
+
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element> -->
+
+

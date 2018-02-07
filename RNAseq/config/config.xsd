@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified">
+	<!-- for nextpresso 1.9.1 -->
+	<!-- CONFIG Info -->
+	
+	<xs:annotation>
+		<xs:documentation>
+			RNAseq pipeline CONFIG schema
+			Osvaldo Graña et al.
+			Jan 2015
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:element name="configurationParameters">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="extraPathsRequired" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="fastQCpath" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="fastQScreen">
+			  		<xs:complexType>
+			    			<xs:sequence>
+							<xs:element name="path" type="xs:string"/>
+							<xs:element name="configurationFile" type="xs:string"/>
+							<xs:element name="subset" type="xs:string"/>
+				    		</xs:sequence>
+			  		</xs:complexType>
+				</xs:element>
+				<xs:element name="bedtoolsPath" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="samtoolsPath" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="bowtiePath" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="tophatPath" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="seqtk">
+					<xs:complexType>
+			    			<xs:sequence>
+							<xs:element name="path" type="xs:string" minOccurs="1" maxOccurs="1"/>
+							<xs:element name="maximunNumberOfInstancesForDownSampling" type="xs:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
+				    		</xs:sequence>
+			  		</xs:complexType>
+				</xs:element>
+				
+				<xs:element name="peakAnnotatorPath" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="htseqCount">
+			  		<xs:complexType>
+			    			<xs:sequence>
+							<xs:element name="path" type="xs:string" default=""/>
+							<xs:element name="pythonpath" type="xs:string" default=""/>					
+				    		</xs:sequence>
+			  		</xs:complexType>
+				</xs:element>
+
+				<xs:element name="tophatFusion">
+			  		<xs:complexType>
+    						<xs:sequence>
+							<xs:element name="path" type="xs:string"/>				
+    						</xs:sequence>
+			  		</xs:complexType>
+				</xs:element>
+
+				<xs:element name="cufflinks">
+			  		<xs:complexType>
+			    			<xs:sequence>
+							<xs:element name="path" type="xs:string"/>				
+			    			</xs:sequence>
+			  		</xs:complexType>
+				</xs:element>
+				
+				<xs:element name="bedGraphToBigWig">
+			  		<xs:complexType>
+			    			<xs:sequence>
+							<xs:element name="path" type="xs:string"/>				
+			    			</xs:sequence>
+			  		</xs:complexType>
+				</xs:element>
+
+				<xs:element name="gsea">
+			  		<xs:complexType>
+			    			<xs:sequence>
+							<xs:element name="path" type="xs:string"/>				
+							<xs:element name="chip" type="xs:string"/>
+							<xs:element name="maxMemory" type="xs:string"/>
+			    			</xs:sequence>
+			  		</xs:complexType>
+				</xs:element>
+
+				<xs:element name="queueSystem">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="none"/>
+							<xs:enumeration value="SGE"/>
+							<xs:enumeration value="PBS"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>								
+				<xs:element name="queueName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="multicore" type="xs:string" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="PERL5LIB" type="xs:string" minOccurs="1" maxOccurs="1" default=""/>
+			</xs:sequence>
+			<xs:attribute name="maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep" type="xs:string"/>						
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
+
+
