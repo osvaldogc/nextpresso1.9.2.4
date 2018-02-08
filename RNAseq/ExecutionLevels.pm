@@ -918,7 +918,9 @@ sub level_5{
 		$command.=" --cuffquantFragBiasCorrect ".$cuffquantFragBiasCorrect." --cuffquantMultiReadCorrect ".$cuffquantMultiReadCorrect;
 		$command.=" --alignmentsDir ".$alignmentsDir." --samtoolsPath ".$samtoolsPath." --cufflinksPath ".$cufflinksPath;
 		$command.=" --libraryType ".$libraryType." --referenceSequence ".$referenceSequence." --extraPathsRequired ".$extraPathsRequired." --cuffquantMaxBundleFrags ".$cuffquantMaxBundleFrags;
-		$command.=" --cuffquant_noEffectiveLengthCorrection ".$cuffquant_noEffectiveLengthCorrection." --cuffdiffMaxBundleFrags ".$cuffdiffMaxBundleFrags;
+		$command.=" --cuffquant_noLengthCorrection ".$cuffquant_noLengthCorrection;
+		$command.=" --cuffquant_noEffectiveLengthCorrection ".$cuffquant_noEffectiveLengthCorrection;
+		$command.=" --cuffdiffMaxBundleFrags ".$cuffdiffMaxBundleFrags;
 		
 		#if a GTF file is provided or if the user would like to use the GTF file created by cuffmerge
 		if(($GTF ne "") || ($cuffquantUseCuffmergeAssembly eq "true")){
