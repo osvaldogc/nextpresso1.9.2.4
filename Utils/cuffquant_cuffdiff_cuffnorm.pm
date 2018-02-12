@@ -652,7 +652,7 @@ sub createGSEArnkFile(){
 			#if not in header line
 			if($line!~ /test_stat/){			
 				my @tokens=split('\t',$line);
-				my $geneID=$tokens[2];
+				my $geneID=$tokens[1]; # reads 'gene_id' column
 		
 				#filters out MIR, SNORD, SNORA, and SCARNA transcripts
 				if(uc($geneID)!~ /^MIR/ && uc($geneID)!~ /^SNORD/ && uc($geneID)!~ /^SNORA/ && uc($geneID)!~ /^SCARNA/){						
