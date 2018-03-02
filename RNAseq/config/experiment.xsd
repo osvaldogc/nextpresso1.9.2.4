@@ -223,6 +223,9 @@
 								</xs:restriction>
 							</xs:simpleType>
 						</xs:attribute>
+						<xs:attribute name="backgroundLevel" type="xs:nonNegativeInteger" default="0"/>
+						<xs:attribute name="requiredPercentageOfSamplesOverBackgroundLevel" type="xs:nonNegativeInteger" default="0"/>
+						<xs:attribute name="IQRthresdhold_forFlatPatternFiltering" type="xs:decimal" default="0"/>						
 			  		</xs:complexType>
 				</xs:element>						
 

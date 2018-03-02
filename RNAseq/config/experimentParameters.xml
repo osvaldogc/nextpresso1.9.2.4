@@ -136,7 +136,7 @@ pairedEnd="false" fileWithChecksumCodesToValidate="/home/osvaldo/NGS/RNAseq_Cxcl
 		<mode>intersection-nonempty</mode>
 	</htseqcount>
 
-	<deseq2 nThreads="2" alpha="0.05" pAdjustMethod="BH">
+	<deseq2 nThreads="2" alpha="0.05" pAdjustMethod="BH" backgroundLevel="0" requiredPercentageOfSamplesOverBackgroundLevel="75" IQRthresdhold_forFlatPatternFiltering="0.5">
 	</deseq2>	
 		
 	<bedGraphToBigWig chromosomeSizesFile="/home/osvaldo/NGS/REFERENCES/mm9.chromosome.sizes"
