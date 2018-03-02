@@ -10,6 +10,7 @@
 #			  (2) Filters out MIR, SNORD, SNORA, and SCARNA transcripts for the RNK file
 # v1.9.2	ene2018 - added scale=TRUE in prcomp function used to build PCA
 #			  added new output file with PCA component values
+# 		mar2018 - new XLSX files are now created without background genes and flat pattern genes
 
 use strict;
 use FindBin qw($Bin); #finds out script path

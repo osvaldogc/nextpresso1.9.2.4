@@ -1969,8 +1969,12 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch{
 	my $backgroundFiltered_AND_flatPatternFiltered_DIR=$workspace."cuffdiff_backgroundFiltered_AND_flatPatternFiltered/";
 	File::Path::make_path($backgroundFiltered_AND_flatPatternFiltered_DIR);
 
+	my $filteringLogFile=$backgroundFiltered_AND_flatPatternFiltered_DIR."filtering.log";
+	
+	open(LOGFILEOUT,">",$filteringLogFile);
 	print STDOUT "[removing background level genes and flat pattern genes]\n";
 	print $logfh (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes]\n";	
+	print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes]\n";
 	
 	if(-d $cuffnormOutDir && -d $backgroundFiltered_AND_flatPatternFiltered_DIR){
 		my $backgroundLevel=$cuffnormParams->[0]->{backgroundLevel};
@@ -2015,6 +2019,7 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch{
 					
 					print $logfh (Miscellaneous->getCurrentDateAndTime())." [Number of total samples] ".$nSamples."\n";
 					print STDOUT "[Number of total samples] ".$nSamples."\n";
+					print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [Number of total samples] ".$nSamples."\n";
 						
 				}else{ #lines with data values
 					$nTotalGenes++;
@@ -2053,7 +2058,8 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch{
 			print $logfh (Miscellaneous->getCurrentDateAndTime())." [number of genes discarded due to background level filtering] ".($nTotalGenes-$nSelectedGenes)."\n";
 			print STDOUT "[number of total genes] ".$nTotalGenes."\n";
 			print STDOUT "[number of genes discarded due to background level filtering] ".($nTotalGenes-$nSelectedGenes)."\n";
-			
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [number of total genes] ".$nTotalGenes."\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [number of genes discarded due to background level filtering] ".($nTotalGenes-$nSelectedGenes)."\n";
 			
 			############ (2) Discards flat pattern genes ##################
 			
@@ -2083,6 +2089,8 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch{
 			#ejecuto R
 			print $logfh (Miscellaneous->getCurrentDateAndTime())." [Running R for] ".$RfilteredScript."\n";
 			print STDOUT "[Running R for] ".$RfilteredScript."\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [Running R for] ".$RfilteredScript."\n";
+			
 			my $command="R --vanilla < ".$RfilteredScript." > ".$RfilteredScript.".Rlog 2>&1";
 			system($command);
 		
@@ -2094,13 +2102,17 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch{
 			
 			#counts the number of genes lost due to flat pattern filtering
 			print $logfh (Miscellaneous->getCurrentDateAndTime())." [number of genes discarded due to flat pattern filtering)] ".$nDiscarded."\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [number of genes discarded due to flat pattern filtering)] ".$nDiscarded."\n";
 			print STDOUT "[number of genes discarded due to flat pattern filtering)] ".$nDiscarded."\n";
 			print $logfh (Miscellaneous->getCurrentDateAndTime())." [total number of discarded genes] ".(($nTotalGenes-$nSelectedGenes)+$nDiscarded)."\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [total number of discarded genes] ".(($nTotalGenes-$nSelectedGenes)+$nDiscarded)."\n";
 			print STDOUT "[total number of discarded genes] ".(($nTotalGenes-$nSelectedGenes)+$nDiscarded)."\n";			
 			print $logfh (Miscellaneous->getCurrentDateAndTime())." [number of remaining/selected genes] ".($nTotalGenes-(($nTotalGenes-$nSelectedGenes)+$nDiscarded))."\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [number of remaining/selected genes] ".($nTotalGenes-(($nTotalGenes-$nSelectedGenes)+$nDiscarded))."\n";
 			print STDOUT "[number of remaining/selected genes] ".($nTotalGenes-(($nTotalGenes-$nSelectedGenes)+$nDiscarded))."\n";
 	
 			print $logfh (Miscellaneous->getCurrentDateAndTime())." [creating new GTF] ".$newGTF_without_background_AND_flatpattern_genes."\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [creating new GTF] ".$newGTF_without_background_AND_flatpattern_genes."\n";
 			print STDOUT "[creating new GTF] ".$newGTF_without_background_AND_flatpattern_genes."\n\n";
 		
 			#generates the new GTF file that excludes background level genes + flat pattern genes
@@ -2119,6 +2131,7 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch{
 		}#if(open(IN,"<",$inputFileForBackgroundFiltering))
 		else{
 			print $logfh (Miscellaneous->getCurrentDateAndTime())."\n[ERROR in removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch function]: ".$inputFileForBackgroundFiltering." does not exist\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."\n[ERROR in removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch function]: ".$inputFileForBackgroundFiltering." does not exist\n";
 			print STDERR "\n[ERROR in removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch function]: ".$inputFileForBackgroundFiltering." does not exist\n\n";
 		exit(-1);
 		}
@@ -2126,14 +2139,211 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch{
 	}#if(-d $cuffnormOutDir && -d $backgroundFiltered_AND_flatPatternFiltered_DIR)
 	else{
 		print $logfh (Miscellaneous->getCurrentDateAndTime())."\n[ERROR in removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch function]: ".$cuffnormOutDir." or ".$backgroundFiltered_AND_flatPatternFiltered_DIR." do not exist\n";
+		print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."\n[ERROR in removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch function]: ".$cuffnormOutDir." or ".$backgroundFiltered_AND_flatPatternFiltered_DIR." do not exist\n";
 		print STDERR "\n[ERROR in removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch function]: ".$cuffnormOutDir." or ".$backgroundFiltered_AND_flatPatternFiltered_DIR." do not exist\n\n";
 		exit(-1);		
 	}
 		
-		
+	close(LOGFILEOUT);
 
 }
 
+sub removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch{
+#After running the initial deseq for ALLsamples, it removes from 'ALLsamples.normalizedCounts.xls' those genes with expression values at background levels + flat pattern genes.
+#Finally, it creates a new annotation GTF, without the removed genes, and runs DESeq2 again
+	
+	##if using $initialGTF => spikes annotation is not considered (modified initial GTF with spikes info is not used here)
+	my ($deseqParams,$initialGTF,$workspace,$logfh)=@_;
+	
+
+	# <----------------- only for testing ----------------------->	 
+#	use Data::Dumper;
+#	print STDERR "FILE:\n".Dumper($comparisons)."\n";
+	
+
+	# <----------------- DESeq2 ----------------------->
+	my $deseqOutDir=$workspace."deseq/";
+	my $backgroundFiltered_AND_flatPatternFiltered_DIR=$workspace."deseq_backgroundFiltered_AND_flatPatternFiltered/";
+	File::Path::make_path($backgroundFiltered_AND_flatPatternFiltered_DIR);
+
+	my $filteringLogFile=$backgroundFiltered_AND_flatPatternFiltered_DIR."filtering.log";
+	
+	open(LOGFILEOUT,">",$filteringLogFile);
+	print STDOUT "[removing background level genes and flat pattern genes]\n";
+	print $logfh (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes]\n";	
+	print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes]\n";
+	
+	if(-d $deseqOutDir && -d $backgroundFiltered_AND_flatPatternFiltered_DIR){
+		my $backgroundLevel=$deseqParams->[0]->{backgroundLevel};
+		my $required_PercentageOfSamplesOverBackgroundLevel=$deseqParams->[0]->{requiredPercentageOfSamplesOverBackgroundLevel};
+		my $IQRthresdhold_forFlatPatternFiltering=$deseqParams->[0]->{IQRthresdhold_forFlatPatternFiltering};
+	
+	
+			
+		
+		my $inputFileForBackgroundFiltering=$deseqOutDir."ALLsamples.normalizedCounts.xls";
+		my $newTable_background_genes_OUT=$backgroundFiltered_AND_flatPatternFiltered_DIR."ALLsamples.normalizedCounts_table.background_genes_removed.xls";
+		my $newGTF_without_background_AND_flatpattern_genes=$backgroundFiltered_AND_flatPatternFiltered_DIR."GTF_without_background_AND_flatpatternGenes.gtf";
+		my $list_with_discardedBackgroundGenes=$backgroundFiltered_AND_flatPatternFiltered_DIR."background_level_removed_genes.txt";
+		my $nTotalGenes=0;
+		my $nSelectedGenes=0;
+		
+		system("rm -f ".$newTable_background_genes_OUT);
+		system("rm -f ".$newGTF_without_background_AND_flatpattern_genes);
+		system("rm -f ".$list_with_discardedBackgroundGenes);
+		
+		if(open(IN,"<",$inputFileForBackgroundFiltering)){
+			open(OUT,">",$newTable_background_genes_OUT);
+			open(DISCARDED,">",$list_with_discardedBackgroundGenes);
+			
+			my $nSamples=0;
+			
+			############ (1) Discards genes under background expression level ##################
+			
+			foreach my $line(<IN>){
+				chomp($line);
+				
+				#prints out header line				
+				if($line=~ /^Name/){
+					print OUT $line."\n";
+					
+					#counts the number of total samples
+					my @tokens=split('\t',$line);	
+					
+					for (my $j=1;$j<@tokens;$j++){
+						$nSamples++;						
+					}
+					
+					print $logfh (Miscellaneous->getCurrentDateAndTime())." [Number of total samples] ".$nSamples."\n";
+					print STDOUT "[Number of total samples] ".$nSamples."\n";
+					print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [Number of total samples] ".$nSamples."\n";
+						
+				}else{ #lines with data values
+					$nTotalGenes++;
+					my $nSamplesOverBackgroundLevel=0;								
+					my @tokens=split('\t',$line);
+					my $gene=$tokens[0];
+										
+					#reads expression values in all the samples for the current gene					
+					for (my $j=1;$j<@tokens;$j++){
+						my $value=$tokens[$j];
+						
+						if($value>$backgroundLevel){
+							$nSamplesOverBackgroundLevel++;
+						}						
+					}					
+					
+					my $percentageOfSamplesOverBackgroundLevel=($nSamplesOverBackgroundLevel/$nSamples)*100;					
+					
+					# if the current gene is over background expression level for the required number of samples
+					if($percentageOfSamplesOverBackgroundLevel>$required_PercentageOfSamplesOverBackgroundLevel){
+						#gene is selected as it has passed background expression level filter
+						print OUT $line."\n";
+						$nSelectedGenes++;
+					}
+					else{
+						print DISCARDED $gene."\n";
+					}			
+				}			
+			}
+			
+			close(OUT);
+			close(DISCARDED);
+			close(IN);
+
+			print $logfh (Miscellaneous->getCurrentDateAndTime())." [number of total genes] ".$nTotalGenes."\n";
+			print $logfh (Miscellaneous->getCurrentDateAndTime())." [number of genes discarded due to background level filtering] ".($nTotalGenes-$nSelectedGenes)."\n";
+			print STDOUT "[number of total genes] ".$nTotalGenes."\n";
+			print STDOUT "[number of genes discarded due to background level filtering] ".($nTotalGenes-$nSelectedGenes)."\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [number of total genes] ".$nTotalGenes."\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [number of genes discarded due to background level filtering] ".($nTotalGenes-$nSelectedGenes)."\n";
+			
+			############ (2) Discards flat pattern genes ##################
+			
+			#done with an R script
+			my $outputFileWithoutFlatPatterns=$backgroundFiltered_AND_flatPatternFiltered_DIR."ALLsamples.normalizedCounts_table.background_genes_AND_flat_patterns_removed.xls";
+			my $listOfDiscardedGenes=$backgroundFiltered_AND_flatPatternFiltered_DIR."flat_pattern_removed_genes.txt";
+			system("rm -f ".$outputFileWithoutFlatPatterns);
+			system("rm -f ".$listOfDiscardedGenes);
+			system("head -n 1 ".$newTable_background_genes_OUT." > ".$outputFileWithoutFlatPatterns);
+			my $fiteringRScritpt="countTable=read.table(\"".$newTable_background_genes_OUT."\",header=TRUE,row.names=1)\n";
+			$fiteringRScritpt.="nRows=dim(countTable)[1]\n";
+			$fiteringRScritpt.="nColumns=dim(countTable)[2]\n";
+			$fiteringRScritpt.="for(i in 1:nRows){\n";
+			$fiteringRScritpt.="\tQ1<-quantile(as.numeric(countTable[i,]))[2] #25% quantile\n";
+			$fiteringRScritpt.="\tmedian<-quantile(as.numeric(countTable[i,]))[3] #50% quantile\n";
+			$fiteringRScritpt.="\tQ3<-quantile(as.numeric(countTable[i,]))[4] #75% quantile\n";
+			$fiteringRScritpt.="\tIQR=Q3-Q1\n";			
+			$fiteringRScritpt.="\tif(IQR>".$IQRthresdhold_forFlatPatternFiltering."){write.table(countTable[i,],file=\"".$outputFileWithoutFlatPatterns."\",append=TRUE,sep=\"\t\",row.names=TRUE,col.names=FALSE)}\n";
+			$fiteringRScritpt.="\telse{write.table(row.names(countTable[i,]),file=\"".$listOfDiscardedGenes."\",append=TRUE,sep=\"\t\",row.names=FALSE,col.names=FALSE,quote=FALSE)}\n";
+			$fiteringRScritpt.="}\n";
+			#guarda script para filtrar outliers
+			my $RfilteredScript=$backgroundFiltered_AND_flatPatternFiltered_DIR."flatPatterns_filter.R";
+			open(RFILTERED,">",$RfilteredScript);
+			print RFILTERED $fiteringRScritpt;
+			close(RFILTERED);
+			
+			#ejecuto R
+			print $logfh (Miscellaneous->getCurrentDateAndTime())." [Running R for] ".$RfilteredScript."\n";
+			print STDOUT "[Running R for] ".$RfilteredScript."\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [Running R for] ".$RfilteredScript."\n";
+			
+			my $command="R --vanilla < ".$RfilteredScript." > ".$RfilteredScript.".Rlog 2>&1";
+			system($command);
+		
+			#counts the number of discarded genes
+			open(NUMBER,"wc -l $listOfDiscardedGenes | cut -d' ' -f 1 |");
+			my $nDiscarded=<NUMBER>;
+			close(NUMBER);
+			chomp($nDiscarded);
+			
+			#counts the number of genes lost due to flat pattern filtering
+			print $logfh (Miscellaneous->getCurrentDateAndTime())." [number of genes discarded due to flat pattern filtering)] ".$nDiscarded."\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [number of genes discarded due to flat pattern filtering)] ".$nDiscarded."\n";
+			print STDOUT "[number of genes discarded due to flat pattern filtering)] ".$nDiscarded."\n";
+			print $logfh (Miscellaneous->getCurrentDateAndTime())." [total number of discarded genes] ".(($nTotalGenes-$nSelectedGenes)+$nDiscarded)."\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [total number of discarded genes] ".(($nTotalGenes-$nSelectedGenes)+$nDiscarded)."\n";
+			print STDOUT "[total number of discarded genes] ".(($nTotalGenes-$nSelectedGenes)+$nDiscarded)."\n";			
+			print $logfh (Miscellaneous->getCurrentDateAndTime())." [number of remaining/selected genes] ".($nTotalGenes-(($nTotalGenes-$nSelectedGenes)+$nDiscarded))."\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [number of remaining/selected genes] ".($nTotalGenes-(($nTotalGenes-$nSelectedGenes)+$nDiscarded))."\n";
+			print STDOUT "[number of remaining/selected genes] ".($nTotalGenes-(($nTotalGenes-$nSelectedGenes)+$nDiscarded))."\n";
+	
+			print $logfh (Miscellaneous->getCurrentDateAndTime())." [creating new GTF] ".$newGTF_without_background_AND_flatpattern_genes."\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())." [creating new GTF] ".$newGTF_without_background_AND_flatpattern_genes."\n";
+			print STDOUT "[creating new GTF] ".$newGTF_without_background_AND_flatpattern_genes."\n\n";
+		
+			#generates the new GTF file that excludes background level genes + flat pattern genes
+			if(open(REDUCEDLIST,"<",$outputFileWithoutFlatPatterns)){			
+				foreach my $line(<REDUCEDLIST>){
+					chomp($line);
+				
+					if($line!~ /^Name/){
+						my @tokens=split('\t',$line);					
+						my $command="grep 'gene_id ".$tokens[0].";' ".$initialGTF." >> ".$newGTF_without_background_AND_flatpattern_genes;
+						system($command);
+					}
+				}
+			}			
+			
+		}#if(open(IN,"<",$inputFileForBackgroundFiltering))
+		else{
+			print $logfh (Miscellaneous->getCurrentDateAndTime())."\n[ERROR in removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch function]: ".$inputFileForBackgroundFiltering." does not exist\n";
+			print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."\n[ERROR in removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch function]: ".$inputFileForBackgroundFiltering." does not exist\n";
+			print STDERR "\n[ERROR in removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch function]: ".$inputFileForBackgroundFiltering." does not exist\n\n";
+		exit(-1);
+		}
+			
+	}#if(-d $deseqOutDir && -d $backgroundFiltered_AND_flatPatternFiltered_DIR)
+	else{
+		print $logfh (Miscellaneous->getCurrentDateAndTime())."\n[ERROR in removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch function]: ".$deseqOutDir." or ".$backgroundFiltered_AND_flatPatternFiltered_DIR." do not exist\n";
+		print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."\n[ERROR in removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch function]: ".$deseqOutDir." or ".$backgroundFiltered_AND_flatPatternFiltered_DIR." do not exist\n";
+		print STDERR "\n[ERROR in removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch function]: ".$deseqOutDir." or ".$backgroundFiltered_AND_flatPatternFiltered_DIR." do not exist\n\n";
+		exit(-1);		
+	}
+		
+	close(LOGFILEOUT);
+
+}
 
 
 1;

@@ -5,17 +5,17 @@
 # RNAseq.pl 
 # Author: Osvaldo Grana
 # Description : RNA-seq analysis pipeline
-# v1.9.1	oct2017
+# v1.9.1	oct2017 - creates the temporal directory (tmp) inside the workspace, and not inside the /tmp of the machine
 #
 # v1.9.2	ene2018 - removes genes with expression levels below background + removes genes with flat pattern expression.
 #			  After this removal, a new GTF is created that contains only those genes that passed the filtering: cuffquant+cuffdiff+cuffnorm
 #			  or htseqcount+deseq is run again using this reduced gene annotation (new GTF)
 #			  (see addings in level 5 and level 6 here, plus the addings in ExecutionLevels.pm
+#		mar2018 - run.log now appends new contents (instead of writing from scratch again)
 
 
 my $version="v1.9.2, ene2018";
 
-#new in v1.9.1: creates the temporal directory (tmp) inside the workspace, and not inside the /tmp of the machine
 
 use strict;
 use warnings;
@@ -235,7 +235,7 @@ sub main(){
 	}
 	
 	my $logFile=$workspace."run.log";	
-	my $logfh=FileHandle->new(">".$logFile);
+	my $logfh=FileHandle->new(">>".$logFile);
 	if(!-e $logfh){
 		print STDERR "\n[ERROR]: Cannot create ".$logfh."\n\n";
 		exit(-1);
@@ -344,11 +344,45 @@ sub main(){
 		if($doSpikesAndGenomeRefIndexing eq "false"){		
 			ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqCountPythonpath,$htseqcountParams,$samtoolsPath,$samples,$GTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$workspace,$experimentName,$logfh,
 			$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);
+			
+			#removes back ground level genes + flat pattern genes
+			ExecutionLevels::removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch($deseqParams,$GTF,$workspace,$logfh);
+		
+			#executes all again using the reduced GTF (without back ground level genes + without flat pattern genes)
+			my $originalAlignmentsDir=$workspace."alignments/";		
+			my $new_workspace=$workspace."deseq_backgroundFiltered_AND_flatPatternFiltered/";
+
+			# creates a symbolic link to the alignments dir, to emulate its presence in the new workspace directory		
+			my $reducedGTF=$new_workspace."GTF_without_background_AND_flatpatternGenes.gtf";
+			my $command="ln -s ".$originalAlignmentsDir." ".$new_workspace;
+			system($command);
+			
+			ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqCountPythonpath,$htseqcountParams,$samtoolsPath,$samples,$reducedGTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$new_workspace,$experimentName,$logfh,
+			$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);			
+						
+			
 		}else{ # when having spikes, it is more appropriate to not consider them for htseqcount as they could affect
 			# normalization values for regular genes. So in this case, the original GTF is given instead of the
 			#one with the combined annotation (genes+spikes) 
 			ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqcountParams,$samtoolsPath,$samples,$initialGTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$workspace,$experimentName,$logfh,
-			$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);		
+			$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);	
+			
+			
+			#removes back ground level genes + flat pattern genes
+			ExecutionLevels::removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch($deseqParams,$initialGTF,$workspace,$logfh);
+		
+			#executes all again using the reduced GTF (without back ground level genes + without flat pattern genes)
+			my $originalAlignmentsDir=$workspace."alignments/";		
+			my $new_workspace=$workspace."deseq_backgroundFiltered_AND_flatPatternFiltered/";
+
+			# creates a symbolic link to the alignments dir, to emulate its presence in the new workspace directory		
+			my $reducedGTF=$new_workspace."GTF_without_background_AND_flatpatternGenes.gtf";
+			my $command="ln -s ".$originalAlignmentsDir." ".$new_workspace;
+			system($command);
+			
+			ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqCountPythonpath,$htseqcountParams,$samtoolsPath,$samples,$reducedGTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$new_workspace,$experimentName,$logfh,
+			$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);
+				
 		}
 	}
 	
