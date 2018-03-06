@@ -92,11 +92,16 @@ sub main(){
 	my $experimentXMLSchema = $Bin."config/experiment.xsd";
 	my $configXMLDocument = undef;	
 	my $experimentXMLDocument = undef;
-
+	my $Cuffdiff_onlyBackgroundAndFlatPatternFiltering=0;
+	my $DESeq2_onlyBackgroundAndFlatPatternFiltering=0;
+	
+	
 	GetOptions(
 		"configDoc=s"=>\$configXMLDocument,	#string
 		"expDoc=s"=>\$experimentXMLDocument,	#string				
-		"step=i"=>\$level 		#numeric
+		"step=i"=>\$level,			#numeric
+		"Cuffdiff_onlyBackgroundAndFlatPatternFiltering"=>$Cuffdiff_onlyBackgroundAndFlatPatternFiltering=1,
+		"DESeq2_onlyBackgroundAndFlatPatternFiltering"=>$DESeq2_onlyBackgroundAndFlatPatternFiltering=1,
 	);
 
 	#it always checks level 0
@@ -316,74 +321,165 @@ sub main(){
 	}			
 		
 	########## level 5: differential expression (cuffquant, cuffdiff and cuffnorm) ##########
-	if($level=~ /5/){
-		ExecutionLevels::level_5($doSpikesAndGenomeRefIndexing,$initialGTF,$extraPathsRequired,$comparisons,$cufflinksPath,$samtoolsPath,$bedtoolsPath,$referenceSequence,$indexPrefixForReferenceSequence,
-		$samples,$GTF,$cuffquantParams,$cuffnormParams,$cuffdiffParams,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$workspace,$experimentName,$logfh,
-		$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);
+	if($level=~ /5/){		
 		
-		#removes back ground level genes + flat pattern genes
-		ExecutionLevels::removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch($cuffnormParams,$initialGTF,$workspace,$logfh);
+		my $doItALL=0;
+				
+		if(!$Cuffdiff_onlyBackgroundAndFlatPatternFiltering){$doItALL=1}
+		else{#only background and flat pattern correction
+			
+			my $cuffdiffOutDir=$workspace."cuffdiff/"; #checks if initial cuffdiff execution was performed
+			
+			if(!-e $cuffdiffOutDir){
+				$doItALL=1; #if general/initial cuffdiff execution was NOT performed, it is then mandatory first
+			}		
+		}
 		
-		#executes all again using the reduced GTF (without back ground level genes + without flat pattern genes)
-		my $originalAlignmentsDir=$workspace."alignments/";		
-		my $new_workspace=$workspace."cuffdiff_backgroundFiltered_AND_flatPatternFiltered/";
+		
+		
+		if($doItALL){#it does it all
+			
+			# Mandatory during the first execution, or if asked for it again
+			ExecutionLevels::level_5($doSpikesAndGenomeRefIndexing,$initialGTF,$extraPathsRequired,$comparisons,$cufflinksPath,$samtoolsPath,$bedtoolsPath,$referenceSequence,$indexPrefixForReferenceSequence,
+			$samples,$GTF,$cuffquantParams,$cuffnormParams,$cuffdiffParams,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$workspace,$experimentName,$logfh,
+			$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);	
 
-		# creates a symbolic link to the alignments dir, to emulate its presence in the new workspace directory		
-		my $reducedGTF=$new_workspace."GTF_without_background_AND_flatpatternGenes.gtf";
-		my $command="ln -s ".$originalAlignmentsDir." ".$new_workspace;
-		system($command);
+			#removes back ground level genes + flat pattern genes
+			ExecutionLevels::removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch($cuffnormParams,$initialGTF,$workspace,$logfh);
 
-		ExecutionLevels::level_5($doSpikesAndGenomeRefIndexing,$reducedGTF,$extraPathsRequired,$comparisons,$cufflinksPath,$samtoolsPath,$bedtoolsPath,$referenceSequence,$indexPrefixForReferenceSequence,
-		$samples,$reducedGTF,$cuffquantParams,$cuffnormParams,$cuffdiffParams,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$new_workspace,$experimentName,$logfh,
-		$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);		
+			#executes all again using the reduced GTF (without back ground level genes + without flat pattern genes)
+			my $originalAlignmentsDir=$workspace."alignments/";		
+			my $new_workspace=$workspace."cuffdiff_backgroundFiltered_AND_flatPatternFiltered/";
+
+			# creates a symbolic link to the alignments dir, to emulate its presence in the new workspace directory		
+			my $reducedGTF=$new_workspace."GTF_without_background_AND_flatpatternGenes.gtf";
+			my $command="ln -s ".$originalAlignmentsDir." ".$new_workspace;
+			system($command);
+
+			ExecutionLevels::level_5($doSpikesAndGenomeRefIndexing,$reducedGTF,$extraPathsRequired,$comparisons,$cufflinksPath,$samtoolsPath,$bedtoolsPath,$referenceSequence,$indexPrefixForReferenceSequence,
+			$samples,$reducedGTF,$cuffquantParams,$cuffnormParams,$cuffdiffParams,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$new_workspace,$experimentName,$logfh,
+			$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);		
 		
+		}else{
+
+			#removes back ground level genes + flat pattern genes
+			ExecutionLevels::removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch($cuffnormParams,$initialGTF,$workspace,$logfh);
+
+			#executes all again using the reduced GTF (without back ground level genes + without flat pattern genes)
+			my $originalAlignmentsDir=$workspace."alignments/";		
+			my $new_workspace=$workspace."cuffdiff_backgroundFiltered_AND_flatPatternFiltered/";
+
+			# creates a symbolic link to the alignments dir, to emulate its presence in the new workspace directory		
+			my $reducedGTF=$new_workspace."GTF_without_background_AND_flatpatternGenes.gtf";
+			my $command="ln -s ".$originalAlignmentsDir." ".$new_workspace;
+			system($command);
+
+			ExecutionLevels::level_5($doSpikesAndGenomeRefIndexing,$reducedGTF,$extraPathsRequired,$comparisons,$cufflinksPath,$samtoolsPath,$bedtoolsPath,$referenceSequence,$indexPrefixForReferenceSequence,
+			$samples,$reducedGTF,$cuffquantParams,$cuffnormParams,$cuffdiffParams,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$new_workspace,$experimentName,$logfh,
+			$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);		
+		}
 	}
 	
 	########## level 6: runs htseq-count (gets read counts for genes) + DESeq2 differential expression
 	if($level=~ /6/){
-		if($doSpikesAndGenomeRefIndexing eq "false"){		
-			ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqCountPythonpath,$htseqcountParams,$samtoolsPath,$samples,$GTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$workspace,$experimentName,$logfh,
-			$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);
-			
-			#removes back ground level genes + flat pattern genes
-			ExecutionLevels::removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch($deseqParams,$GTF,$workspace,$logfh);
+	
+		my $doItALL=0;
 		
-			#executes all again using the reduced GTF (without back ground level genes + without flat pattern genes)
-			my $originalAlignmentsDir=$workspace."alignments/";		
-			my $new_workspace=$workspace."deseq_backgroundFiltered_AND_flatPatternFiltered/";
-
-			# creates a symbolic link to the alignments dir, to emulate its presence in the new workspace directory		
-			my $reducedGTF=$new_workspace."GTF_without_background_AND_flatpatternGenes.gtf";
-			my $command="ln -s ".$originalAlignmentsDir." ".$new_workspace;
-			system($command);
+		if(!$DESeq2_onlyBackgroundAndFlatPatternFiltering){$doItALL=1}
+		else{#only background and flat pattern correction
 			
-			ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqCountPythonpath,$htseqcountParams,$samtoolsPath,$samples,$reducedGTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$new_workspace,$experimentName,$logfh,
-			$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);			
-						
+			my $deseqOutDir=$workspace."deseq/"; #checks if initial DESeq2 execution was performed
 			
-		}else{ # when having spikes, it is more appropriate to not consider them for htseqcount as they could affect
-			# normalization values for regular genes. So in this case, the original GTF is given instead of the
-			#one with the combined annotation (genes+spikes) 
-			ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqcountParams,$samtoolsPath,$samples,$initialGTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$workspace,$experimentName,$logfh,
-			$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);	
-			
-			
-			#removes back ground level genes + flat pattern genes
-			ExecutionLevels::removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch($deseqParams,$initialGTF,$workspace,$logfh);
-		
-			#executes all again using the reduced GTF (without back ground level genes + without flat pattern genes)
-			my $originalAlignmentsDir=$workspace."alignments/";		
-			my $new_workspace=$workspace."deseq_backgroundFiltered_AND_flatPatternFiltered/";
-
-			# creates a symbolic link to the alignments dir, to emulate its presence in the new workspace directory		
-			my $reducedGTF=$new_workspace."GTF_without_background_AND_flatpatternGenes.gtf";
-			my $command="ln -s ".$originalAlignmentsDir." ".$new_workspace;
-			system($command);
-			
-			ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqCountPythonpath,$htseqcountParams,$samtoolsPath,$samples,$reducedGTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$new_workspace,$experimentName,$logfh,
-			$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);
-				
+			if(!-e $deseqOutDir){
+				$doItALL=1; #if general/initial DESeq2 execution was NOT performed, it is then mandatory first
+			}		
 		}
+		
+	
+		if($doItALL){#it does it all
+			if($doSpikesAndGenomeRefIndexing eq "false"){
+				ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqCountPythonpath,$htseqcountParams,$samtoolsPath,$samples,$GTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$workspace,$experimentName,$logfh,
+				$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);
+
+				#removes back ground level genes + flat pattern genes
+				ExecutionLevels::removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch($deseqParams,$GTF,$workspace,$logfh);
+
+				#executes all again using the reduced GTF (without back ground level genes + without flat pattern genes)
+				my $originalAlignmentsDir=$workspace."alignments/";		
+				my $new_workspace=$workspace."deseq_backgroundFiltered_AND_flatPatternFiltered/";
+
+				# creates a symbolic link to the alignments dir, to emulate its presence in the new workspace directory		
+				my $reducedGTF=$new_workspace."GTF_without_background_AND_flatpatternGenes.gtf";
+				my $command="ln -s ".$originalAlignmentsDir." ".$new_workspace;
+				system($command);
+
+				ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqCountPythonpath,$htseqcountParams,$samtoolsPath,$samples,$reducedGTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$new_workspace,$experimentName,$logfh,
+				$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);			
+
+			}else{ # when having spikes, it is more appropriate to not consider them for htseqcount as they could affect
+				# normalization values for regular genes. So in this case, the original GTF is given instead of the
+				#one with the combined annotation (genes+spikes) 
+				ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqcountParams,$samtoolsPath,$samples,$initialGTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$workspace,$experimentName,$logfh,
+				$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);	
+
+				#removes back ground level genes + flat pattern genes
+				ExecutionLevels::removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch($deseqParams,$initialGTF,$workspace,$logfh);
+
+				#executes all again using the reduced GTF (without back ground level genes + without flat pattern genes)
+				my $originalAlignmentsDir=$workspace."alignments/";		
+				my $new_workspace=$workspace."deseq_backgroundFiltered_AND_flatPatternFiltered/";
+
+				# creates a symbolic link to the alignments dir, to emulate its presence in the new workspace directory		
+				my $reducedGTF=$new_workspace."GTF_without_background_AND_flatpatternGenes.gtf";
+				my $command="ln -s ".$originalAlignmentsDir." ".$new_workspace;
+				system($command);
+
+				ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqCountPythonpath,$htseqcountParams,$samtoolsPath,$samples,$reducedGTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$new_workspace,$experimentName,$logfh,
+				$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);
+			}
+			
+		}#if($doItALL)
+		else{
+			if($doSpikesAndGenomeRefIndexing eq "false"){
+
+				#removes back ground level genes + flat pattern genes
+				ExecutionLevels::removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch($deseqParams,$GTF,$workspace,$logfh);
+
+				#executes all again using the reduced GTF (without back ground level genes + without flat pattern genes)
+				my $originalAlignmentsDir=$workspace."alignments/";		
+				my $new_workspace=$workspace."deseq_backgroundFiltered_AND_flatPatternFiltered/";
+
+				# creates a symbolic link to the alignments dir, to emulate its presence in the new workspace directory		
+				my $reducedGTF=$new_workspace."GTF_without_background_AND_flatpatternGenes.gtf";
+				my $command="ln -s ".$originalAlignmentsDir." ".$new_workspace;
+				system($command);
+
+				ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqCountPythonpath,$htseqcountParams,$samtoolsPath,$samples,$reducedGTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$new_workspace,$experimentName,$logfh,
+				$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);			
+
+
+			}else{ # when having spikes, it is more appropriate to not consider them for htseqcount as they could affect
+				# normalization values for regular genes. So in this case, the original GTF is given instead of the
+				#one with the combined annotation (genes+spikes) 
+
+				#removes back ground level genes + flat pattern genes
+				ExecutionLevels::removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch($deseqParams,$initialGTF,$workspace,$logfh);
+
+				#executes all again using the reduced GTF (without back ground level genes + without flat pattern genes)
+				my $originalAlignmentsDir=$workspace."alignments/";		
+				my $new_workspace=$workspace."deseq_backgroundFiltered_AND_flatPatternFiltered/";
+
+				# creates a symbolic link to the alignments dir, to emulate its presence in the new workspace directory		
+				my $reducedGTF=$new_workspace."GTF_without_background_AND_flatpatternGenes.gtf";
+				my $command="ln -s ".$originalAlignmentsDir." ".$new_workspace;
+				system($command);
+
+				ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqCountPythonpath,$htseqcountParams,$samtoolsPath,$samples,$reducedGTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$new_workspace,$experimentName,$logfh,
+				$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);
+
+			}		
+		}#else #if($doItALL)
+		
 	}
 	
 	########## level 7: creates wiggle files from bam alignments
@@ -436,6 +532,14 @@ sub help(){
 				Step 7: BedGraph and BigWig files for genome browsers
 				Step 8: GSEA for specific gene sets over the different comparisons done with cuffdiff
 				Step 9: gene fusion prediction
+				
+
+				
+			
+			[Optional parameters]
+				
+				--Cuffdiff_onlyBackgroundAndFlatPatternFiltering	[allows repeating only the last part of setp 5]
+				--DESeq2_onlyBackgroundAndFlatPatternFiltering		[allows repeating only the last part of setp 6]
 				
 				
 };
