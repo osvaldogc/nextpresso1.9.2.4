@@ -92,18 +92,18 @@ sub main(){
 	my $experimentXMLSchema = $Bin."config/experiment.xsd";
 	my $configXMLDocument = undef;	
 	my $experimentXMLDocument = undef;
-	my $Cuffdiff_onlyBackgroundAndFlatPatternFiltering=0;
-	my $DESeq2_onlyBackgroundAndFlatPatternFiltering=0;
-	
+	my $Cuffdiff_ONLY_background_and_flatPattern_filtering=0;
+	my $DESeq2_ONLY_background_and_flatPattern_filtering=0;
 	
 	GetOptions(
 		"configDoc=s"=>\$configXMLDocument,	#string
 		"expDoc=s"=>\$experimentXMLDocument,	#string				
 		"step=i"=>\$level,			#numeric
-		"Cuffdiff_onlyBackgroundAndFlatPatternFiltering"=>$Cuffdiff_onlyBackgroundAndFlatPatternFiltering=1,
-		"DESeq2_onlyBackgroundAndFlatPatternFiltering"=>$DESeq2_onlyBackgroundAndFlatPatternFiltering=1,
+		"Cuffdiff_ONLY_background_and_flatPattern_filtering" =>\$Cuffdiff_ONLY_background_and_flatPattern_filtering,
+		"DESeq2_ONLY_background_and_flatPattern_filtering" =>\$DESeq2_ONLY_background_and_flatPattern_filtering
 	);
-
+	
+	
 	#it always checks level 0
 	$level="0".$level;
 	
@@ -325,7 +325,7 @@ sub main(){
 		
 		my $doItALL=0;
 				
-		if(!$Cuffdiff_onlyBackgroundAndFlatPatternFiltering){$doItALL=1}
+		if(!$Cuffdiff_ONLY_background_and_flatPattern_filtering){$doItALL=1}
 		else{#only background and flat pattern correction
 			
 			my $cuffdiffOutDir=$workspace."cuffdiff/"; #checks if initial cuffdiff execution was performed
@@ -385,7 +385,7 @@ sub main(){
 	
 		my $doItALL=0;
 		
-		if(!$DESeq2_onlyBackgroundAndFlatPatternFiltering){$doItALL=1}
+		if(!$DESeq2_ONLY_background_and_flatPattern_filtering){$doItALL=1}
 		else{#only background and flat pattern correction
 			
 			my $deseqOutDir=$workspace."deseq/"; #checks if initial DESeq2 execution was performed
@@ -538,8 +538,8 @@ sub help(){
 			
 			[Optional parameters]
 				
-				--Cuffdiff_onlyBackgroundAndFlatPatternFiltering	[allows repeating only the last part of setp 5]
-				--DESeq2_onlyBackgroundAndFlatPatternFiltering		[allows repeating only the last part of setp 6]
+				--Cuffdiff_ONLY_background_and_flatPattern_filtering	[allows repeating only the last part of setp 5]
+				--DESeq2_ONLY_background_and_flatPattern_filtering	[allows repeating only the last part of setp 6]
 				
 				
 };
