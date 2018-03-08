@@ -1969,21 +1969,28 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch{
 	my $backgroundFiltered_AND_flatPatternFiltered_DIR=$workspace."cuffdiff_backgroundFiltered_AND_flatPatternFiltered/";
 	File::Path::make_path($backgroundFiltered_AND_flatPatternFiltered_DIR);
 
-	my $filteringLogFile=$backgroundFiltered_AND_flatPatternFiltered_DIR."filtering.log";
+	my $filteringLogFile=$backgroundFiltered_AND_flatPatternFiltered_DIR."filtering.log.txt";
 	
-	open(LOGFILEOUT,">",$filteringLogFile);
+	open(LOGFILEOUT,">>",$filteringLogFile);
 	print STDOUT "[removing background level genes and flat pattern genes]\n";
 	print $logfh (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes]\n";	
-	print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes]\n";
+	print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes]\n";	
 	
 	if(-d $cuffnormOutDir && -d $backgroundFiltered_AND_flatPatternFiltered_DIR){
 		my $backgroundLevel=$cuffnormParams->[0]->{backgroundLevel};
 		my $required_PercentageOfSamplesOverBackgroundLevel=$cuffnormParams->[0]->{requiredPercentageOfSamplesOverBackgroundLevel};
 		my $IQRthresdhold_forFlatPatternFiltering=$cuffnormParams->[0]->{IQRthresdhold_forFlatPatternFiltering};
 	
-	
-			
-		
+		print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[background expression threshold] ".$backgroundLevel."\n";
+		print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[required percentage of samples for background expression threshold] ".$required_PercentageOfSamplesOverBackgroundLevel."\n";
+		print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[IQR threshold for flat pattern filtering] ".$IQRthresdhold_forFlatPatternFiltering."\n";
+		print $logfh (Miscellaneous->getCurrentDateAndTime())."[background expression threshold] ".$backgroundLevel."\n";
+		print $logfh (Miscellaneous->getCurrentDateAndTime())."[required percentage of samples for background expression threshold] ".$required_PercentageOfSamplesOverBackgroundLevel."\n";
+		print $logfh (Miscellaneous->getCurrentDateAndTime())."[IQR threshold for flat pattern filtering] ".$IQRthresdhold_forFlatPatternFiltering."\n";
+		print STDOUT "[background expression threshold] ".$backgroundLevel."\n";
+		print STDOUT "[required percentage of samples for background expression threshold] ".$required_PercentageOfSamplesOverBackgroundLevel."\n";
+		print STDOUT "[IQR threshold for flat pattern filtering] ".$IQRthresdhold_forFlatPatternFiltering."\n";
+
 		my $inputFileForBackgroundFiltering=$cuffnormOutDir."ALLsamples.genes.fpkm_table.xls";
 		my $newTable_background_genes_OUT=$backgroundFiltered_AND_flatPatternFiltered_DIR."ALLsamples.genes.fpkm_table.background_genes_removed.xls";
 		my $newGTF_without_background_AND_flatpattern_genes=$backgroundFiltered_AND_flatPatternFiltered_DIR."GTF_without_background_AND_flatpatternGenes.gtf";
@@ -2166,9 +2173,9 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch{
 	my $backgroundFiltered_AND_flatPatternFiltered_DIR=$workspace."deseq_backgroundFiltered_AND_flatPatternFiltered/";
 	File::Path::make_path($backgroundFiltered_AND_flatPatternFiltered_DIR);
 
-	my $filteringLogFile=$backgroundFiltered_AND_flatPatternFiltered_DIR."filtering.log";
+	my $filteringLogFile=$backgroundFiltered_AND_flatPatternFiltered_DIR."filtering.log.txt";
 	
-	open(LOGFILEOUT,">",$filteringLogFile);
+	open(LOGFILEOUT,">>",$filteringLogFile);
 	print STDOUT "[removing background level genes and flat pattern genes]\n";
 	print $logfh (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes]\n";	
 	print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes]\n";
@@ -2178,8 +2185,15 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch{
 		my $required_PercentageOfSamplesOverBackgroundLevel=$deseqParams->[0]->{requiredPercentageOfSamplesOverBackgroundLevel};
 		my $IQRthresdhold_forFlatPatternFiltering=$deseqParams->[0]->{IQRthresdhold_forFlatPatternFiltering};
 	
-	
-			
+		print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[background expression threshold] ".$backgroundLevel."\n";
+		print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[required percentage of samples for background expression threshold] ".$required_PercentageOfSamplesOverBackgroundLevel."\n";
+		print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[IQR threshold for flat pattern filtering] ".$IQRthresdhold_forFlatPatternFiltering."\n";
+		print $logfh (Miscellaneous->getCurrentDateAndTime())."[background expression threshold] ".$backgroundLevel."\n";
+		print $logfh (Miscellaneous->getCurrentDateAndTime())."[required percentage of samples for background expression threshold] ".$required_PercentageOfSamplesOverBackgroundLevel."\n";
+		print $logfh (Miscellaneous->getCurrentDateAndTime())."[IQR threshold for flat pattern filtering] ".$IQRthresdhold_forFlatPatternFiltering."\n";
+		print STDOUT "[background expression threshold] ".$backgroundLevel."\n";
+		print STDOUT "[required percentage of samples for background expression threshold] ".$required_PercentageOfSamplesOverBackgroundLevel."\n";
+		print STDOUT "[IQR threshold for flat pattern filtering] ".$IQRthresdhold_forFlatPatternFiltering."\n";	
 		
 		my $inputFileForBackgroundFiltering=$deseqOutDir."ALLsamples.normalizedCounts.xls";
 		my $newTable_background_genes_OUT=$backgroundFiltered_AND_flatPatternFiltered_DIR."ALLsamples.normalizedCounts_table.background_genes_removed.xls";
