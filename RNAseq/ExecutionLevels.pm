@@ -1972,9 +1972,9 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch{
 	my $filteringLogFile=$backgroundFiltered_AND_flatPatternFiltered_DIR."filtering.log.txt";
 	
 	open(LOGFILEOUT,">>",$filteringLogFile);
-	print STDOUT "[removing background level genes and flat pattern genes]\n";
-	print $logfh (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes]\n";	
-	print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes]\n";	
+	print STDOUT "[removing background level genes and flat pattern genes for Cuffdiff]\n";
+	print $logfh (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes for Cuffdiff]\n";	
+	print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes for Cuffdiff]\n";	
 	
 	if(-d $cuffnormOutDir && -d $backgroundFiltered_AND_flatPatternFiltered_DIR){
 		my $backgroundLevel=$cuffnormParams->[0]->{backgroundLevel};
@@ -2176,9 +2176,9 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch{
 	my $filteringLogFile=$backgroundFiltered_AND_flatPatternFiltered_DIR."filtering.log.txt";
 	
 	open(LOGFILEOUT,">>",$filteringLogFile);
-	print STDOUT "[removing background level genes and flat pattern genes]\n";
-	print $logfh (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes]\n";	
-	print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes]\n";
+	print STDOUT "[removing background level genes and flat pattern genes for DESeq2]\n";
+	print $logfh (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes for DESeq2]\n";	
+	print LOGFILEOUT (Miscellaneous->getCurrentDateAndTime())."[removing background level genes and flat pattern genes for DESeq2]\n";
 	
 	if(-d $deseqOutDir && -d $backgroundFiltered_AND_flatPatternFiltered_DIR){
 		my $backgroundLevel=$deseqParams->[0]->{backgroundLevel};
