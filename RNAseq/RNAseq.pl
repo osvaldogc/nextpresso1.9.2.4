@@ -70,7 +70,7 @@ sub main(){
 	print "*****************************************************************************\n";
 	print "*                                                                           *\n";
 	print "*    nextpresso: next generation sequencing expression analysis pipeline    *\n";
-	print "*    ".$version."                                                        *\n";
+	print "*    ".$version."                                                      *\n";
 	print "*    Author: Osvaldo Grana                                                  *\n";
 	print "*                                                                           *\n";
 	print "*****************************************************************************\n\n";
