@@ -9,6 +9,16 @@
 #			  After this removal a new GTF is created that contains only those genes that passed the filtering: cuffquant+cuffdiff+cuffnorm
 #			  or htseqcount+deseq is run again using this reduced gene annotation (new GTF): added removeBackgroundLevelGenesANDFlatPatternGenes for
 #			  cuffdiff and deseq2
+# v1.9.2.1	mar2018 - the criteria to avoid filtering out a gene is now $percentageOfSamplesOverBackgroundLevel>=$required_PercentageOfSamplesOverBackgroundLevel
+#			  for both cuffdiff and deseq2 (before the condition was set as strictly > , which filtered out genes where, for instance, its expression in three
+#			  out of six samples were over background expression level. In that case, the gene should be kept and not filtered out).
+#
+#			  When there are no flat pattern genes to filter out, the number of flat pattern genes is now written as '0'. In v1.9.2 this value was the result of 
+#			  doing 'wc -l ' of the number of lines of the file with the list of flat pattern filtered genes, but when no genes are filtered out due to this reason,
+#			  the expected file does not exist, and the 'wc -l ' command results in a bug, now solved this way.
+
+
+
 
 package ExecutionLevels;
 use strict;
@@ -2046,7 +2056,7 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch{
 					my $percentageOfSamplesOverBackgroundLevel=($nSamplesOverBackgroundLevel/$nSamples)*100;					
 					
 					# if the current gene is over background expression level for the required number of samples
-					if($percentageOfSamplesOverBackgroundLevel>$required_PercentageOfSamplesOverBackgroundLevel){
+					if($percentageOfSamplesOverBackgroundLevel>=$required_PercentageOfSamplesOverBackgroundLevel){
 						#gene is selected as it has passed background expression level filter
 						print OUT $line."\n";
 						$nSelectedGenes++;
@@ -2102,10 +2112,13 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_cuffdiff_branch{
 			system($command);
 		
 			#counts the number of discarded genes
-			open(NUMBER,"wc -l $listOfDiscardedGenes | cut -d' ' -f 1 |");
-			my $nDiscarded=<NUMBER>;
-			close(NUMBER);
-			chomp($nDiscarded);
+			my $nDiscarded=0;
+			if(-e $listOfDiscardedGenes){
+				open(NUMBER,"wc -l $listOfDiscardedGenes | cut -d' ' -f 1 |");
+				$nDiscarded=<NUMBER>;
+				close(NUMBER);
+				chomp($nDiscarded);
+			}
 			
 			#counts the number of genes lost due to flat pattern filtering
 			print $logfh (Miscellaneous->getCurrentDateAndTime())." [number of genes discarded due to flat pattern filtering)] ".$nDiscarded."\n";
@@ -2250,7 +2263,7 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch{
 					my $percentageOfSamplesOverBackgroundLevel=($nSamplesOverBackgroundLevel/$nSamples)*100;					
 					
 					# if the current gene is over background expression level for the required number of samples
-					if($percentageOfSamplesOverBackgroundLevel>$required_PercentageOfSamplesOverBackgroundLevel){
+					if($percentageOfSamplesOverBackgroundLevel>=$required_PercentageOfSamplesOverBackgroundLevel){
 						#gene is selected as it has passed background expression level filter
 						print OUT $line."\n";
 						$nSelectedGenes++;
@@ -2306,10 +2319,13 @@ sub removeBackgroundLevelGenesANDFlatPatternGenes_for_deseq_branch{
 			system($command);
 		
 			#counts the number of discarded genes
-			open(NUMBER,"wc -l $listOfDiscardedGenes | cut -d' ' -f 1 |");
-			my $nDiscarded=<NUMBER>;
-			close(NUMBER);
-			chomp($nDiscarded);
+			my $nDiscarded=0;
+			if(-e $listOfDiscardedGenes){
+				open(NUMBER,"wc -l $listOfDiscardedGenes | cut -d' ' -f 1 |");
+				$nDiscarded=<NUMBER>;
+				close(NUMBER);
+				chomp($nDiscarded);
+			}
 			
 			#counts the number of genes lost due to flat pattern filtering
 			print $logfh (Miscellaneous->getCurrentDateAndTime())." [number of genes discarded due to flat pattern filtering)] ".$nDiscarded."\n";

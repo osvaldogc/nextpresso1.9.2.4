@@ -12,9 +12,13 @@
 #			  or htseqcount+deseq is run again using this reduced gene annotation (new GTF)
 #			  (see addings in level 5 and level 6 here, plus the addings in ExecutionLevels.pm
 #		mar2018 - run.log now appends new contents (instead of writing from scratch again)
+#
+# v.1.9.2.1	mar2018 - modified ExecutionLevels.pm
+#
+#			  Default execution levels are now 13456789
 
 
-my $version="v1.9.2, ene2018";
+my $version="v1.9.2.1, mar2018";
 
 
 use strict;
@@ -86,7 +90,7 @@ sub main(){
 	$SIG{__WARN__} = \&confess;
 	
 	
-	my $level = "1345"; # default value;
+	my $level = "13456789"; # default value;
 	
 	my $configXMLSchema  = $Bin."config/config.xsd";
 	my $experimentXMLSchema = $Bin."config/experiment.xsd";
