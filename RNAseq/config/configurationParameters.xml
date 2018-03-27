@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- nextpresso 1.9.1 -->
+<!-- nextpresso 1.9.2.2 (without changes since v1.9.1) -->
 <configurationParameters maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep="4">
 	<extraPathsRequired></extraPathsRequired>
 	<fastQCpath>/home/ograna/SOFTWARE/fastqc_v0.11.7/FastQC</fastQCpath>	
@@ -39,5 +39,5 @@
 	<queueName>none</queueName>
 	<multicore>2</multicore>
 	<!-- The content of PERL5LIB is added to the PERL5LIB environment variable -->
-	<PERL5LIB>/home/ograna/SOFTWARE/nextpresso1.9.1/Utils/GD</PERL5LIB>
+	<PERL5LIB>/home/ograna/SOFTWARE/nextpresso1.9.2.2/Utils/GD</PERL5LIB>
 </configurationParameters>

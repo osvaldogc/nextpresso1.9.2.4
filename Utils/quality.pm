@@ -71,7 +71,7 @@ sub fastqScreen($$$$$$$){
 		$command.="--paired ";
 	}
 	
-	$command.="--outdir ".$outDir." --conf ".$fastQScreenConf." --aligner bowtie --nohits --subset ".$subset." ".$inputFile;
+	$command.="--outdir ".$outDir." --conf ".$fastQScreenConf." --aligner bowtie2 --nohits --subset ".$subset." ".$inputFile;
 	print "\n\t[executing] ".$command."\n";
 	system($command);
 }
