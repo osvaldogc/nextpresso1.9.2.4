@@ -2,36 +2,36 @@
 <!-- nextpresso 1.9.1 -->
 <configurationParameters maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep="4">
 	<extraPathsRequired></extraPathsRequired>
-	<fastQCpath>/home/osvaldo/SOFTWARE/FastQC_v0.11.0</fastQCpath>	
+	<fastQCpath>/home/ograna/SOFTWARE/fastqc_v0.11.7/FastQC</fastQCpath>	
 	<fastQScreen>
-		<path>/home/osvaldo/SOFTWARE/FastQ_screen/fastq_screen_v0.4.2</path>
-		<configurationFile>/home/osvaldo/SOFTWARE/FastQ_screen/fastq_screen_v0.4.2/fastq_screen.conf</configurationFile>
-		<subset>1000</subset>
+		<path>/home/ograna/SOFTWARE/FastQ_screen/fastq_screen_v0.4.2</path>
+		<configurationFile>/home/ograna/SOFTWARE/fastq_screen_v0.4.2/fastq_screen.conf</configurationFile>
+		<subset>10000</subset>
 	</fastQScreen>
-	<bedtoolsPath>/home/osvaldo/SOFTWARE/BEDtools/bedtools-2.17.0/bin</bedtoolsPath>	
-	<samtoolsPath>/home/osvaldo/SOFTWARE/SAMtools/samtools-0.1.19</samtoolsPath>	
-	<bowtiePath>/home/osvaldo/SOFTWARE/Bowtie/bowtie-1.0.0</bowtiePath>
-	<tophatPath>/home/osvaldo/SOFTWARE/Tophat/tophat-2.0.10.Linux_x86_64</tophatPath>
+	<bedtoolsPath>/home/ograna/SOFTWARE/BEDtools/bedtools-2.17.0/bin</bedtoolsPath>	
+	<samtoolsPath>/home/ograna/SOFTWARE/SAMtools/samtools-0.1.19</samtoolsPath>	
+	<bowtiePath>/home/ograna/SOFTWARE/Bowtie/bowtie-1.0.0</bowtiePath>
+	<tophatPath>/home/ograna/SOFTWARE/Tophat/tophat-2.0.10.Linux_x86_64</tophatPath>
 	<seqtk>
-		<path>/home/osvaldo/SOFTWARE/seqtk/seqtk-master</path>
+		<path>/home/ograna/SOFTWARE/seqtk/seqtk-master</path>
 		<maximunNumberOfInstancesForDownSampling>1</maximunNumberOfInstancesForDownSampling>
 	</seqtk>
-	<peakAnnotatorPath>/home/osvaldo/SOFTWARE/PeakAnnotator/modified_PeakAnnotator</peakAnnotatorPath>
+	<peakAnnotatorPath>/home/ograna/SOFTWARE/PeakAnnotator/modified_PeakAnnotator</peakAnnotatorPath>
 	<htseqCount>
-		<path>/home/osvaldo/SOFTWARE/HTSeq/HTSeq-0.6.1/build/scripts-2.7</path>		
-		<pythonpath>/home/osvaldo/SOFTWARE/HTSeq/HTSeq-0.6.1/build/scripts-2.7:/home/osvaldo/SOFTWARE/HTSeq/HTSeq-0.6.1/build/lib.linux-x86_64-2.7</pythonpath>
+		<path>/home/ograna/SOFTWARE/HTSeq/HTSeq-0.6.1/build/scripts-2.7</path>		
+		<pythonpath>/home/ograna/SOFTWARE/HTSeq/HTSeq-0.6.1/build/scripts-2.7:/home/ograna/SOFTWARE/HTSeq/HTSeq-0.6.1/build/lib.linux-x86_64-2.7</pythonpath>
 	</htseqCount>
 	<tophatFusion>
-		<path>/home/osvaldo/SOFTWARE/Tophat/tophat-2.0.10.Linux_x86_64</path>
+		<path>/home/ograna/SOFTWARE/Tophat/tophat-2.0.10.Linux_x86_64</path>
 	</tophatFusion>
 	<cufflinks>
-		<path>/home/osvaldo/SOFTWARE/Cufflinks/cufflinks-2.2.1.Linux_x86_64</path>
+		<path>/home/ograna/SOFTWARE/Cufflinks/cufflinks-2.2.1.Linux_x86_64</path>
 	</cufflinks>
 	<bedGraphToBigWig>
-		<path>/home/osvaldo/SOFTWARE</path>
+		<path>/home/ograna/SOFTWARE</path>
 	</bedGraphToBigWig>
 	<gsea>
-		<path>/home/osvaldo/SOFTWARE/GSEA/gsea2-2.2.2.jar</path>
+		<path>/home/ograna/SOFTWARE/GSEA/gsea2-2.2.2.jar</path>
 		<chip>gseaftp.broadinstitute.org://pub/gsea/annotations/GENE_SYMBOL.chip</chip>
 		<maxMemory>8G</maxMemory>
 	</gsea>
@@ -39,5 +39,5 @@
 	<queueName>none</queueName>
 	<multicore>2</multicore>
 	<!-- The content of PERL5LIB is added to the PERL5LIB environment variable -->
-	<PERL5LIB>/home/osvaldo/SOFTWARE/nextpresso1.9.1/Utils/GD</PERL5LIB>
+	<PERL5LIB>/home/ograna/SOFTWARE/nextpresso1.9.1/Utils/GD</PERL5LIB>
 </configurationParameters>

@@ -16,9 +16,11 @@
 # v.1.9.2.1	mar2018 - modified ExecutionLevels.pm
 #
 #			  Default execution levels are now 13456789
+# v.1.9.2.2	mar2018 - FastQScreen now uses BOWTIE2, new fastq_screen.DOCKER.conf created
+#
+#			  Updated FastQC to the last version (fastqc_v0.11.7)
 
-
-my $version="v1.9.2.1, mar2018";
+my $version="v1.9.2.2, mar2018";
 
 
 use strict;

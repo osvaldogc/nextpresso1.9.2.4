@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- nextpresso 1.9.1 -->
+<configurationParameters maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep="4">
+	<extraPathsRequired></extraPathsRequired>
+	<fastQCpath>/SOFTWARE/fastqc_v0.11.7/FastQC</fastQCpath>	
+	<fastQScreen>
+		<path>/SOFTWARE/fastq_screen_v0.4.2</path>
+		<configurationFile>/SOFTWARE/fastq_screen_v0.4.2/fastq_screen.DOCKER.conf</configurationFile>
+		<subset>10000</subset>
+	</fastQScreen>
+	<bedtoolsPath>/SOFTWARE/bedtools-2.17.0/bin</bedtoolsPath>	
+	<samtoolsPath>/SOFTWARE/samtools-0.1.19</samtoolsPath>	
+	<bowtiePath>/SOFTWARE/bowtie-1.0.0</bowtiePath>
+	<tophatPath>/SOFTWARE/tophat-2.0.10.Linux_x86_64</tophatPath>
+	<seqtk>
+		<path>/SOFTWARE/seqtk/seqtk-master</path>
+		<maximunNumberOfInstancesForDownSampling>1</maximunNumberOfInstancesForDownSampling>
+	</seqtk>
+	<peakAnnotatorPath>/SOFTWARE/modified_PeakAnnotator</peakAnnotatorPath>
+	<htseqCount>
+		<path>/SOFTWARE/HTSeq/HTSeq-0.6.1/build/scripts-2.7</path>
+		<pythonpath>/SOFTWARE/HTSeq/HTSeq-0.6.1/build/scripts-2.7:/SOFTWARE/HTSeq/HTSeq-0.6.1/build/lib.linux-x86_64-2.7/</pythonpath>
+	</htseqCount>
+	<tophatFusion>
+		<path>/SOFTWARE/tophat-2.0.10.Linux_x86_64</path>
+	</tophatFusion>
+	<cufflinks>
+		<path>/SOFTWARE/cufflinks-2.2.1.Linux_x86_64</path>
+	</cufflinks>
+	<bedGraphToBigWig>
+		<path>/SOFTWARE</path>
+	</bedGraphToBigWig>
+	<gsea>
+		<path>/SOFTWARE/GSEA/gsea2-2.2.2.jar</path>
+		<chip>gseaftp.broadinstitute.org://pub/gsea/annotations/GENE_SYMBOL.chip</chip>
+		<maxMemory>8G</maxMemory>
+	</gsea>
+	<queueSystem>none</queueSystem>		
+	<queueName>none</queueName>
+	<multicore>2</multicore>
+	<!-- The content of PERL5LIB is added to the PERL5LIB environment variable -->
+	<PERL5LIB>/nextpresso1.9.1/Utils/GD</PERL5LIB>
+</configurationParameters>
