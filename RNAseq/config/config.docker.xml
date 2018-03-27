@@ -4,8 +4,8 @@
 	<extraPathsRequired></extraPathsRequired>
 	<fastQCpath>/SOFTWARE/fastqc_v0.11.7/FastQC</fastQCpath>	
 	<fastQScreen>
-		<path>/SOFTWARE/fastq_screen_v0.4.2</path>
-		<configurationFile>/SOFTWARE/fastq_screen_v0.4.2/fastq_screen.DOCKER.conf</configurationFile>
+		<path>/SOFTWARE/fastq_screen_v0.11.4</path>
+		<configurationFile>/SOFTWARE/fastq_screen_v0.11.4/fastq_screen.DOCKER.conf</configurationFile>
 		<subset>10000</subset>
 	</fastQScreen>
 	<bedtoolsPath>/SOFTWARE/bedtools-2.17.0/bin</bedtoolsPath>	

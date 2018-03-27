@@ -4,8 +4,8 @@
 	<extraPathsRequired></extraPathsRequired>
 	<fastQCpath>/home/ograna/SOFTWARE/fastqc_v0.11.7/FastQC</fastQCpath>	
 	<fastQScreen>
-		<path>/home/ograna/SOFTWARE/FastQ_screen/fastq_screen_v0.4.2</path>
-		<configurationFile>/home/ograna/SOFTWARE/fastq_screen_v0.4.2/fastq_screen.conf</configurationFile>
+		<path>/home/ograna/SOFTWARE/fastq_screen_v0.11.4</path>
+		<configurationFile>/home/ograna/SOFTWARE/fastq_screen_v0.11.4/fastq_screen.conf</configurationFile>
 		<subset>10000</subset>
 	</fastQScreen>
 	<bedtoolsPath>/home/ograna/SOFTWARE/BEDtools/bedtools-2.17.0/bin</bedtoolsPath>	
