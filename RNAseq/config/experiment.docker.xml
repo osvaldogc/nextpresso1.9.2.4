@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- nextpresso v1.9.2 -->
+<experiment projectName="Myproject" workspace="/RESULTS"
+referenceSequence="/REFERENCES/Mus_musculus/UCSC/mm9/Sequence/BowtieIndex/genome.fa"
+GTF="/REFERENCES/Mus_musculus/UCSC/mm9/Annotation/Archives/archive-2014-05-23-16-05-24/Genes/genes.gtf"
+pairedEnd="false" fileWithChecksumCodesToValidate="">
+	
+	<library name="WT_11" leftFile="/SAMPLES/36640_TGACCA_C97YVANXX_7_20160218B_20160218.bam">
+		<rightFile></rightFile>
+		<type>bam</type>
+		<solexaQualityEncoding></solexaQualityEncoding>
+		<libraryType>firststrand</libraryType>
+		<trimming do="false">
+			<nNucleotidesLeftEnd>3</nNucleotidesLeftEnd>
+			<nNucleotidesRightEnd>5</nNucleotidesRightEnd>
+		</trimming>
+		<downsampling do="false">
+			<seed>3</seed>
+			<nReads>32945150</nReads>
+		</downsampling>
+		<mateInnerDist>197</mateInnerDist>
+		<mateStdDev>50</mateStdDev>
+	</library>
+
+	<library name="WT_21" leftFile="/SAMPLES/36641_ACAGTG_C97YVANXX_7_20160218B_20160218.bam">
+		<rightFile></rightFile>
+		<type>bam</type>
+		<solexaQualityEncoding></solexaQualityEncoding>
+		<libraryType>firststrand</libraryType>
+		<trimming do="false">
+			<nNucleotidesLeftEnd>3</nNucleotidesLeftEnd>
+			<nNucleotidesRightEnd>5</nNucleotidesRightEnd>
+		</trimming>
+		<downsampling do="false">
+			<seed>3</seed>
+			<nReads>32945150</nReads>
+		</downsampling>
+		<mateInnerDist>197</mateInnerDist>
+		<mateStdDev>50</mateStdDev>
+	</library>
+
+	<library name="WT_22" leftFile="/SAMPLES/36642_GCCAAT_C97YVANXX_7_20160218B_20160218.bam">
+		<rightFile></rightFile>
+		<type>bam</type>
+		<solexaQualityEncoding></solexaQualityEncoding>
+		<libraryType>firststrand</libraryType>
+		<trimming do="false">
+			<nNucleotidesLeftEnd>3</nNucleotidesLeftEnd>
+			<nNucleotidesRightEnd>5</nNucleotidesRightEnd>
+		</trimming>
+		<downsampling do="false">
+			<seed>3</seed>
+			<nReads>32945150</nReads>
+		</downsampling>
+		<mateInnerDist>197</mateInnerDist>
+		<mateStdDev>50</mateStdDev>
+	</library>	
+	
+	<library name="Cxcl5_23" leftFile="/SAMPLES/36644_ACTTGA_C97YVANXX_7_20160218B_20160218.bam">
+		<rightFile></rightFile>
+		<type>bam</type>
+		<solexaQualityEncoding></solexaQualityEncoding>
+		<libraryType>firststrand</libraryType>
+		<trimming do="false">
+			<nNucleotidesLeftEnd>3</nNucleotidesLeftEnd>
+			<nNucleotidesRightEnd>5</nNucleotidesRightEnd>
+		</trimming>
+		<downsampling do="false">
+			<seed>3</seed>
+			<nReads>0</nReads>
+		</downsampling>
+		<mateInnerDist>197</mateInnerDist>
+		<mateStdDev>50</mateStdDev>
+	</library>
+
+	<library name="Cxcl5_33" leftFile="/SAMPLES/36645_GATCAG_C97YVANXX_7_20160218B_20160218.bam">
+		<rightFile></rightFile>
+		<type>bam</type>
+		<solexaQualityEncoding></solexaQualityEncoding>
+		<libraryType>firststrand</libraryType>
+		<trimming do="false">
+			<nNucleotidesLeftEnd>3</nNucleotidesLeftEnd>
+			<nNucleotidesRightEnd>5</nNucleotidesRightEnd>
+		</trimming>
+		<downsampling do="false">
+			<seed>3</seed>
+			<nReads>32945150</nReads>
+		</downsampling>
+		<mateInnerDist>197</mateInnerDist>
+		<mateStdDev>50</mateStdDev>
+	</library>
+	
+	<comparison name="Cxcl5_vs_WT">
+		<condition name="WT" cuffdiffPosition="1">
+			<libraryName>WT_11</libraryName>
+			<libraryName>WT_21</libraryName>
+			<libraryName>WT_22</libraryName>
+		</condition>
+		<condition name="Cxcl5" cuffdiffPosition="2">
+			<libraryName>Cxcl5_23</libraryName>
+			<libraryName>Cxcl5_33</libraryName>
+		</condition>
+	</comparison>	
+	
+	<tophat useGTF="true" nTophatThreads="1" maxMultihits="20" readMismatches="2" segmentLength="25"
+		segmentMismatches="1" spliceMismatches="0" reportSecondaryAlignments="false" bowtie="1"
+		readEditDist="2" readGapLength="2" referenceIndexing="false">
+		<coverageSearch>--no-coverage-search</coverageSearch>
+		<fusionSearchExperiment performFusionSearch="false">	
+		</fusionSearchExperiment>					
+	</tophat>
+
+	<cufflinks useGTF="true" nThreads="1" fragBiasCorrect="true"
+		multiReadCorrect="false" libraryNormalizationMethod="classic-fpkm" maxBundleFrags="500000"
+		normalization="compatibleHits" noEffectiveLengthCorrection="true" noLengthCorrection="false">
+	</cufflinks>
+
+	<cuffmerge nThreads="4">
+	</cuffmerge>			  	
+
+	<cuffquant useCuffmergeAssembly="false" nThreads="1" fragBiasCorrect="true" multiReadCorrect="false" seed="123L" maxBundleFrags="500000"
+		noEffectiveLengthCorrection="true" noLengthCorrection="false">
+	</cuffquant>
+
+	<cuffnorm useCuffmergeAssembly="false" nThreads="1" outputFormat="simple-table" libraryNormalizationMethod="geometric"
+		seed="123L" normalization="compatibleHits" backgroundLevel="0" requiredPercentageOfSamplesOverBackgroundLevel="75" IQRthresdhold_forFlatPatternFiltering="0.5">
+	</cuffnorm>
+
+	<cuffdiff useCuffmergeAssembly="false" nThreads="1" fragBiasCorrect="true" multiReadCorrect="false"
+		libraryNormalizationMethod="geometric" FDR="0.05" minAlignmentCount="10"
+		seed="123L" FPKMthreshold="2" maxBundleFrags="500000" noEffectiveLengthCorrection="true"
+		noLengthCorrection="false" dispersionMethod="pooled">
+	</cuffdiff>
+
+	<htseqcount minaqual="0" featuretype="exon" idattr="gene_id">
+		<mode>intersection-nonempty</mode>
+	</htseqcount>
+
+	<deseq2 nThreads="2" alpha="0.05" pAdjustMethod="BH" backgroundLevel="0" requiredPercentageOfSamplesOverBackgroundLevel="75" IQRthresdhold_forFlatPatternFiltering="0.5">
+	</deseq2>	
+		
+	<bedGraphToBigWig chromosomeSizesFile="/REFERENCES/mm9.chromosome.sizes"
+		bigDataUrlPrefix="http://bioinfo.cnio.es/RNAseq_results/">
+	</bedGraphToBigWig>
+
+	<gsea collapse="false" mode="Max_probe" norm="meandiv" nperm="1000"
+		scoring_scheme="classic" include_only_symbols="true" make_sets="true"
+		plot_top_x="75" rnd_seed="123" set_max="1000" set_min="10" zip_report="true">
+		<geneset>/SOFTWARE/GSEA/GSEA_pathways_definitions/c3.mir.v4.0.symbols_microRNA_targets.gmt</geneset>
+		<geneset>/SOFTWARE/GSEA/GSEA_pathways_definitions/c6.all.v4.0.symbols_Oncogenic_Signatures.gmt</geneset>
+		<geneset>/SOFTWARE/GSEA/GSEA_pathways_definitions/c7.all.v4.0.symbols_Immunologic_Signatures.gmt</geneset>
+		<geneset>/SOFTWARE/GSEA/GSEA_pathways_definitions/c2.cp.v4.0.symbols_canonical_pathways.gmt</geneset>
+		<geneset>/SOFTWARE/GSEA/GSEA_pathways_definitions/c2.cgp.v4.0.symbols_chemicalANDgenetic_Perturbations.gmt</geneset>
+        	<geneset>/SOFTWARE/GSEA/GSEA_pathways_definitions/c3.tft.v4.0.symbols_TranscriptionFactors.gmt</geneset>
+		<geneset>/SOFTWARE/GSEA/GSEA_pathways_definitions/Ficheros_DBs_MOUSE_pathways/whichGenes_29ene2016/BIOCARTA_mouse.gmx</geneset>
+		<geneset>/SOFTWARE/GSEA/GSEA_pathways_definitions/Ficheros_DBs_MOUSE_pathways/whichGenes_29ene2016/KEGG_mouse.gmx</geneset>
+		<geneset>/SOFTWARE/GSEA/GSEA_pathways_definitions/Ficheros_DBs_MOUSE_pathways/whichGenes_29ene2016/REACTOME_mouse.gmx</geneset>
+	</gsea>
+	
+	<tophatfusion nTophatFusionThreads="1" numFusionReads="3" numFusionPairs="2" numFusionBoth="0"
+	fusionReadMismatches="2" fusionMultireads="2" nonHuman="false"
+		pathToAnnotationFiles="/REFERENCES/tophatFusion/"
+		pathToBlastAll="/SOFTWARE/blast/blast-2.2.20/bin"
+		pathToBlastn="/SOFTWARE/blast/ncbi-blast-2.2.29+/bin">
+	</tophatfusion>
+
+	<spikeInControlMixes do="false" ref="/SPIKES/Ficheros_spikes/ERCC92.fa" gtf="/SPIKES/Ficheros_spikes/ERCC92.gtf" nThreadsForBowtie="1">
+	</spikeInControlMixes>
+
+</experiment>
+

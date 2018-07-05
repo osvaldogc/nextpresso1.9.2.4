@@ -425,7 +425,7 @@ sub main(){
 			}else{ # when having spikes, it is more appropriate to not consider them for htseqcount as they could affect
 				# normalization values for regular genes. So in this case, the original GTF is given instead of the
 				#one with the combined annotation (genes+spikes) 
-				ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqcountParams,$samtoolsPath,$samples,$initialGTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$workspace,$experimentName,$logfh,
+				ExecutionLevels::level_6($perl5lib,$comparisons,$deseqParams,$extraPathsRequired,$htseqCountPath,$htseqCountPythonpath,$htseqcountParams,$samtoolsPath,$samples,$initialGTF,$maximunNumberOfInstancesAllowedToRunSimultaneouslyInOneParticularStep,$workspace,$experimentName,$logfh,
 				$executionCreatedTempDir,$queueSystem,$queueName,$multicore,$queueProject);	
 
 				#removes back ground level genes + flat pattern genes
