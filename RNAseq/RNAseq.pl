@@ -13,14 +13,15 @@
 #			  (see addings in level 5 and level 6 here, plus the addings in ExecutionLevels.pm
 #		mar2018 - run.log now appends new contents (instead of writing from scratch again)
 #
-# v.1.9.2.1	mar2018 - modified ExecutionLevels.pm
+# v1.9.2.1	mar2018 - modified ExecutionLevels.pm
 #
 #			  Default execution levels are now 13456789
-# v.1.9.2.2	mar2018 - FastQScreen now uses BOWTIE2, new fastq_screen.DOCKER.conf created
+# v1.9.2.2	mar2018 - FastQScreen now uses BOWTIE2, new fastq_screen.DOCKER.conf created
 #
 #			  Updated FastQC to the last version (fastqc_v0.11.7)
+# v1.9.2.4	mar2019 - FastQScreen updated, DESeq2 PCA now uses rlog
 
-my $version="v1.9.2.2, mar2018";
+my $version="v1.9.2.4, mar2019";
 
 
 use strict;
