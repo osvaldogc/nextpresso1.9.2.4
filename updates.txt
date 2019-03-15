@@ -1,3 +1,14 @@
+****nextpresso1.9.2.4, mar2019
+
+(1) Introduces 'rlogMatrix' for PCA calculations with DESeq2
+
+(2) Fastq Screen has been updated to version 0.13.0
+
+(3) New GRCh38, GRCh38 rRNA, GRCm38 and GRCm38 rRNA references added to Fastq Screen
+
+
+
+
 ****nextpresso1.9.2.2, mar2018
 
 (1) FastQScreen now uses BOWTIE2, new fastq_screen.DOCKER.conf created

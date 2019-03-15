@@ -11,6 +11,8 @@
 # v1.9.2	ene2018 - added scale=TRUE in prcomp function used to build PCA
 #			  added new output file with PCA component values
 # 		mar2018 - new XLSX files are now created without background genes and flat pattern genes
+#
+# 		mar2019 - Introduces 'rlogMatrix' for PCA
 
 use strict;
 use FindBin qw($Bin); #finds out script path
@@ -238,6 +240,14 @@ sub executeDESeqANDcomputeCorrelationAndPCA($$$$$$$$){
 	$deseqScript.="condition <- relevel(condition, \"".$controlName."\")\n";
 	$deseqScript.="experiment_design=data.frame(\nrow.names = colnames(countTable),\ncondition,\nlibType)\n";	
 	$deseqScript.="cds <- DESeqDataSetFromMatrix(countData = countTable, colData=experiment_design, design=~condition)\n";
+	
+	# rlog matrix for PCA
+	$deseqScript.="rld<-rlog(cds)\n";
+	$deseqScript.="rlogMatrix <- assay(rld)\n";
+	my $rlog_normalizedCounts_file_for_PCA=$deseqOutDir.$comparisonName.".rlog.normalizedCounts.for.PCA.xls";
+	$deseqScript.="write.table(rlogMatrix,file = \"".$rlog_normalizedCounts_file_for_PCA."\",row.names = TRUE,col.names = NA,append = FALSE, quote = FALSE, sep = \"\\t\",eol = \"\\n\", na = \"NA\", dec = \".\")\n";
+	
+	$deseqScript.="cds <- estimateSizeFactors(cds)\n"; # esta linea da igual ponerla o no ponerla para la normalizacion, porque ya lo hace implicitamente	
 	if($nThreads>1){
 		$deseqScript.="cds_DESeqED <- DESeq(cds,parallel = TRUE)\n";
 		$deseqScript.="res <- results(cds_DESeqED,parallel = TRUE,alpha = ".$alpha.", pAdjustMethod = \"".$pAdjustMethod."\")\n";
@@ -252,6 +262,10 @@ sub executeDESeqANDcomputeCorrelationAndPCA($$$$$$$$){
 	my $normalizedCounts_file=$deseqOutDir.$comparisonName.".normalizedCounts.xls";
 	$deseqScript.="normalizedReadCounts = counts(cds_DESeqED,normalized=TRUE)\n";
 	$deseqScript.="write.table(normalizedReadCounts,file = \"".$normalizedCounts_file."\",row.names = TRUE,col.names = NA,append = FALSE, quote = FALSE, sep = \"\\t\",eol = \"\\n\", na = \"NA\", dec = \".\")\n";
+
+
+
+
 	
 	my $scriptName=$deseqOutDir.$comparisonName.".R";
 	open(OUT,">",$scriptName);
@@ -300,7 +314,7 @@ sub executeDESeqANDcomputeCorrelationAndPCA($$$$$$$$){
 	my $PCAcompFile=$deseqOutDir.$comparisonName.".PCAcomponent_values.xls";
 	
 	open(RSCRIPT,">",$corrScriptFile);	
-	print RSCRIPT "normalizedCounts=read.table(\"".$normalizedCounts_file."\",header=T,sep = \"\\t\")\n";
+	print RSCRIPT "normalizedCounts=read.table(\"".$rlog_normalizedCounts_file_for_PCA."\",header=T,sep = \"\\t\")\n";
 	print RSCRIPT "dim(normalizedCounts)\n";
 	print RSCRIPT "normMatrix <- as.matrix(normalizedCounts[,2:".($nSamples+1)."])\n";	
 	#pearsonCorrelation
